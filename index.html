@@ -9,108 +9,129 @@
   html,body{height:100%}
   body{
     font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
-    color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:#fff;min-height:100vh;overflow:hidden;position:relative;
     background:
-      radial-gradient(120% 80% at 50% 0%, #23233a 0%, #10101c 45%, #08080f 100%);
-    position:relative;overflow:hidden;
+      radial-gradient(130% 90% at 50% -10%, #2a2a4a 0%, #16162a 40%, #0a0a16 75%, #06060d 100%);
   }
-  /* 星空星点 */
-  .star{position:absolute;border-radius:50%;background:#fff;opacity:.5;animation:twinkle 3s ease-in-out infinite}
-  @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.8}}
-  /* 柔和光晕 */
-  .glow{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
-  .glow1{width:420px;height:420px;background:rgba(90,120,255,.16);top:-120px;left:50%;transform:translateX(-50%)}
-  .glow2{width:360px;height:360px;background:rgba(150,90,255,.10);bottom:-100px;left:15%}
+  /* 星点 */
+  .star{position:absolute;border-radius:50%;background:#fff;pointer-events:none;animation:twinkle 3s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.75;transform:scale(1.15)}}
+  /* 光晕 */
+  .halo{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+  .halo1{width:520px;height:520px;background:rgba(70,110,255,.14);top:-160px;left:50%;transform:translateX(-50%)}
+  .halo2{width:420px;height:420px;background:rgba(160,90,255,.10);bottom:-140px;right:-60px}
+  .halo3{width:380px;height:380px;background:rgba(60,200,255,.08);bottom:10%;left:-80px}
 
-  .main{position:relative;z-index:2;text-align:center;padding:0 30px;margin-top:-20px}
+  .stage{
+    position:relative;z-index:2;height:100%;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;padding:0 30px 120px;
+    animation:rise .8s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+  /* 歌名信息 */
+  .meta{text-align:center;margin-bottom:42px}
+  .title{font-size:26px;font-weight:600;letter-spacing:1px;word-break:break-all;line-height:1.3;
+    text-shadow:0 2px 24px rgba(255,255,255,.12)}
+  .artist{font-size:14px;color:rgba(255,255,255,.45);margin-top:12px;letter-spacing:2px;word-break:break-all}
+
   /* 封面 */
-  .cover-wrap{width:250px;height:250px;margin:0 auto 40px;position:relative}
+  .cover-wrap{position:relative;width:264px;height:264px;margin:0 auto}
   .cover-wrap::before{
-    content:'';position:absolute;inset:-3px;border-radius:50%;
-    background:conic-gradient(from 0deg,rgba(120,150,255,.5),rgba(180,120,255,.3),rgba(120,200,255,.5),rgba(120,150,255,.5));
-    filter:blur(14px);opacity:.35;z-index:-1;animation:spin 10s linear infinite;
+    content:'';position:absolute;inset:-2px;border-radius:50%;
+    background:conic-gradient(from 0deg,rgba(120,150,255,.55),rgba(200,130,255,.35),rgba(100,210,255,.5),rgba(120,150,255,.55));
+    filter:blur(16px);opacity:.35;z-index:-1;animation:rot 12s linear infinite;
+  }
+  .cover-wrap::after{
+    content:'';position:absolute;inset:0;border-radius:50%;
+    box-shadow:0 0 60px rgba(120,150,255,.18),inset 0 0 0 1px rgba(255,255,255,.06);
+    z-index:1;pointer-events:none;
   }
   .cover{
-    width:100%;height:100%;border-radius:50%;overflow:hidden;
-    background:linear-gradient(135deg,#1e1e32,#2c2c4a);
-    box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.08);
+    width:100%;height:100%;border-radius:50%;overflow:hidden;position:relative;
+    background:linear-gradient(140deg,#232340,#34345a);
     display:flex;align-items:center;justify-content:center;
+    box-shadow:0 30px 70px rgba(0,0,0,.55);
   }
   .cover img{width:100%;height:100%;object-fit:cover}
-  .cover .ph{width:84px;height:84px;opacity:.6}
-  .cover.playing{animation:spin 18s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-
-  .title{font-size:22px;font-weight:600;margin-bottom:10px;letter-spacing:.5px;word-break:break-all;line-height:1.3}
-  .artist{font-size:14px;color:rgba(255,255,255,.45);word-break:break-all;letter-spacing:.5px}
+  .cover .ph{width:92px;height:92px;opacity:.55}
+  .cover.spin{animation:rot 18s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
 
   /* 底部控制栏 */
-  .control-bar{
-    position:fixed;bottom:0;left:0;right:0;z-index:5;
-    display:flex;align-items:center;justify-content:center;gap:56px;
-    padding:26px 0 calc(26px + env(safe-area-inset-bottom));
-    background:rgba(20,20,32,.55);
-    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  .dock{
+    position:fixed;left:0;right:0;bottom:0;z-index:5;
+    display:flex;align-items:center;justify-content:center;gap:60px;
+    padding:22px 0 calc(24px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(18,18,30,.1),rgba(18,18,30,.62));
+    backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%);
     border-top:1px solid rgba(255,255,255,.07);
-    box-shadow:0 -10px 40px rgba(0,0,0,.3);
+    box-shadow:0 -18px 50px rgba(0,0,0,.35);
+  }
+  .dock::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
   }
   .btn{
-    width:52px;height:52px;border-radius:50%;border:none;background:transparent;
+    width:56px;height:56px;border-radius:50%;border:none;background:transparent;
     color:rgba(255,255,255,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;
-    transition:transform .15s,opacity .15s;
+    transition:transform .18s,color .18s,background .18s;
+    position:relative;
   }
-  .btn svg{width:30px;height:30px;fill:currentColor}
-  .btn:hover{opacity:1}
-  .btn:active{transform:scale(.92)}
+  .btn svg{width:30px;height:30px;fill:currentColor;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+  .btn:active{transform:scale(.9)}
+  .btn:hover{color:#fff}
   .btn.play{
-    width:72px;height:72px;background:rgba(255,255,255,.92);color:#111;
-    box-shadow:0 10px 30px rgba(255,255,255,.18);
+    width:76px;height:76px;
+    background:linear-gradient(145deg,#ffffff,#dfe3f2);
+    color:#111;box-shadow:0 12px 40px rgba(255,255,255,.22),0 4px 16px rgba(0,0,0,.4);
   }
-  .btn.play svg{width:34px;height:34px}
-  .btn.play:active{transform:scale(.95)}
+  .btn.play svg{width:36px;height:36px;filter:none}
+  .btn.play:active{transform:scale(.94)}
+  .btn.play:hover{color:#111;box-shadow:0 16px 48px rgba(255,255,255,.28)}
 
-  .hint{position:fixed;bottom:110px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.25);z-index:4}
+  .hint{position:fixed;bottom:118px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px;z-index:4;pointer-events:none}
 </style>
 </head>
 <body>
 <script>
-  // 生成星点
   (function(){
-    var n=46;
+    var n=70;
     for(var i=0;i<n;i++){
       var s=document.createElement('div');
       s.className='star';
-      var size=Math.random()*2+1;
-      s.style.width=size+'px';s.style.height=size+'px';
+      var sz=Math.random()*2.2+.5;
+      s.style.width=sz+'px';s.style.height=sz+'px';
       s.style.left=Math.random()*100+'%';
       s.style.top=Math.random()*100+'%';
-      s.style.animationDelay=Math.random()*3+'s';
-      s.style.animationDuration=(2+Math.random()*3)+'s';
+      s.style.animationDelay=(Math.random()*4)+'s';
+      s.style.animationDuration=(2.5+Math.random()*3.5)+'s';
       document.body.appendChild(s);
     }
   })();
 </script>
-<div class="glow glow1"></div>
-<div class="glow glow2"></div>
+<div class="halo halo1"></div><div class="halo halo2"></div><div class="halo halo3"></div>
 
-<div class="main">
+<div class="stage">
+  <div class="meta">
+    <div class="title" id="title">未知歌曲</div>
+    <div class="artist" id="artist">未知歌手</div>
+  </div>
   <div class="cover-wrap">
     <div class="cover" id="cover">
       <img id="coverImg" alt="" style="display:none">
       <div class="ph" id="ph">
-        <svg viewBox="0 0 100 100" fill="none" stroke="#8aa0ff" stroke-width="3.5" stroke-linecap="round">
-          <circle cx="50" cy="50" r="32"/><path d="M38 62 V38 l28-8 v26" fill="#8aa0ff" stroke="none"/>
+        <svg viewBox="0 0 100 100" fill="none" stroke="#8aa0ff" stroke-width="3" stroke-linecap="round">
+          <circle cx="50" cy="50" r="33"/><path d="M37 63 V37 l30-9 v27" fill="#8aa0ff" stroke="none"/>
         </svg>
       </div>
     </div>
   </div>
-  <div class="title" id="title">未知歌曲</div>
-  <div class="artist" id="artist">未知歌手</div>
 </div>
 
 <div class="hint" id="hint">点击播放</div>
 
-<div class="control-bar">
+<div class="dock">
   <button class="btn" id="prevBtn" title="后退10秒">
     <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
   </button>
@@ -131,7 +152,7 @@
   var cover=qs.get('c')||'';
   var src=qs.get('u')||'';
   document.getElementById('title').textContent=title;
-  document.getElementById('artist').textContent=artist||'';
+  document.getElementById('artist').textContent=artist||'未知歌手';
   var coverImg=document.getElementById('coverImg'),ph=document.getElementById('ph');
   if(cover){coverImg.src=cover;coverImg.style.display='block';ph.style.display='none'}
   var audio=document.getElementById('audio');
@@ -145,22 +166,17 @@
   function toggle(){
     if(!audio.src){hint.textContent='音频加载失败，请重新分享';return}
     if(playing){
-      audio.pause();
-      playIcon.innerHTML=playPath;
-      coverEl.classList.remove('playing');
-      hint.textContent='已暂停';
+      audio.pause();playIcon.innerHTML=playPath;coverEl.classList.remove('spin');hint.textContent='已暂停';
     }else{
       audio.play().then(function(){hint.textContent=''}).catch(function(){hint.textContent='无法播放，请检查链接'});
-      playIcon.innerHTML=pausePath;
-      coverEl.classList.add('playing');
-      hint.textContent='';
+      playIcon.innerHTML=pausePath;coverEl.classList.add('spin');hint.textContent='';
     }
     playing=!playing;
   }
   playBtn.onclick=toggle;
   document.getElementById('prevBtn').onclick=function(){if(audio.src)audio.currentTime=Math.max(0,audio.currentTime-10)};
   document.getElementById('nextBtn').onclick=function(){if(audio.src)audio.currentTime=Math.min(audio.duration||0,audio.currentTime+10)};
-  audio.addEventListener('ended',function(){playing=false;playIcon.innerHTML=playPath;coverEl.classList.remove('playing');hint.textContent='播放完毕'});
+  audio.addEventListener('ended',function(){playing=false;playIcon.innerHTML=playPath;coverEl.classList.remove('spin');hint.textContent='播放完毕'});
   audio.addEventListener('error',function(){hint.textContent='音频加载失败，请重新分享'});
 })();
 </script>
