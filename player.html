@@ -10,7 +10,7 @@
 <style>
 @font-face {
   font-family: 'KleinBlueNight';
-  src: url('https://yuanning123419.github.io/fonts/kelanyin.ttf') format('truetype');
+  src: url('https://yuanning123419.github.io/fonts/kelanyin.woff2') format('woff2');
   font-display: swap;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -239,7 +239,7 @@ audio{display:none}
   }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
-  var PARTICLE_COUNT = Math.min(220, Math.floor(window.innerWidth * window.innerHeight / 6000));
+  var PARTICLE_COUNT = Math.min(80, Math.floor(window.innerWidth * window.innerHeight / 12000));
   for(var i = 0; i < PARTICLE_COUNT; i++){
     particles.push({
       x: Math.random() * pCanvas.width,
@@ -452,15 +452,13 @@ audio{display:none}
   audio.addEventListener('ended', function(){ setPlaying(false); });
   audio.addEventListener('error', function(){ showToast('音频加载失败，请重新分享'); });
 
-  // 高频歌词同步（requestAnimationFrame，比 timeupdate 更及时）
-  var LYRIC_OFFSET = 0.15; // 提前0.15秒切换歌词
-  function lyricLoop(){
+  // 歌词同步（每100ms更新一次，避免占用过多CPU）
+  var LYRIC_OFFSET = 0.15;
+  setInterval(function(){
     if(!audio.paused && DATA.length){
       setLyric(audio.currentTime + LYRIC_OFFSET);
     }
-    requestAnimationFrame(lyricLoop);
-  }
-  requestAnimationFrame(lyricLoop);
+  }, 100);
 
   // ===== 进度拖拽 =====
   function seekAt(cx){ var r = progressBar.getBoundingClientRect(); var p = (cx - r.left) / r.width; p = Math.max(0, Math.min(1, p)); if(audio.duration) audio.currentTime = p * audio.duration; }
