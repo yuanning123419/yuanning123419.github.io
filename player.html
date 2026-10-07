@@ -442,10 +442,20 @@ audio{display:none}
   audio.addEventListener('loadedmetadata', function(){ updateTime(); });
   audio.addEventListener('timeupdate', function(){
     if(!seeking){ var p = (audio.currentTime / audio.duration) * 100 || 0; progressFill.style.width = p + '%'; progressThumb.style.left = p + '%'; }
-    updateTime(); setLyric(audio.currentTime);
+    updateTime();
   });
   audio.addEventListener('ended', function(){ setPlaying(false); });
   audio.addEventListener('error', function(){ showToast('音频加载失败，请重新分享'); });
+
+  // 高频歌词同步（requestAnimationFrame，比 timeupdate 更及时）
+  var LYRIC_OFFSET = 0.15; // 提前0.15秒切换歌词
+  function lyricLoop(){
+    if(!audio.paused && DATA.length){
+      setLyric(audio.currentTime + LYRIC_OFFSET);
+    }
+    requestAnimationFrame(lyricLoop);
+  }
+  requestAnimationFrame(lyricLoop);
 
   // ===== 进度拖拽 =====
   function seekAt(cx){ var r = progressBar.getBoundingClientRect(); var p = (cx - r.left) / r.width; p = Math.max(0, Math.min(1, p)); if(audio.duration) audio.currentTime = p * audio.duration; }
