@@ -14,8 +14,10 @@ html,body{font-family:"Noto Sans SC","PingFang SC","HarmonyOS Sans SC","Alibaba 
 
 /* ---------- 背景层 ---------- */
 #custom-bg{position:fixed;inset:0;z-index:0;background:#000;overflow:hidden}
-#album-bg{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;filter:blur(120px) brightness(0.18) saturate(1.5);transform:scale(1.4);transition:background-image 1.5s ease,opacity 1.5s ease;opacity:0}
+#album-bg{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;filter:blur(140px) brightness(0.10) saturate(1.2);transform:scale(1.5);transition:background-image 1.5s ease,opacity 1.5s ease;opacity:0}
 #album-bg.visible{opacity:1}
+/* 黑色遮罩，确保背景始终是深色 */
+#bg-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.7) 100%);pointer-events:none}
 #particle-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 
 /* ---------- 启动页（官网同款） ---------- */
@@ -120,6 +122,7 @@ audio{display:none}
 <!-- 背景 -->
 <div id="custom-bg"></div>
 <div id="album-bg"></div>
+<div id="bg-overlay"></div>
 <canvas id="particle-canvas"></canvas>
 
 <!-- 启动页 -->
